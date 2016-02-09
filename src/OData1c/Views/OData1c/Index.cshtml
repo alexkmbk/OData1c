@@ -1,0 +1,22 @@
+﻿<h1>Данные из базы 1С</h1>
+<h4>Загрузка происходит при переключении вкладок</h4>
+
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">Акты выполненных работ</a></li>
+        <li><a href="/OData1c/Customers">Контрагенты</a></li>
+    </ul>
+</div>
+
+<div id="tabs-1">
+    <p>
+        @Html.Partial("_Docs", ViewData["Docs"])
+    </p>
+    
+</div>
+
+<script>
+ 
+    $("#tabs").tabs();
+
+ </script>

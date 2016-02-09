@@ -1,0 +1,94 @@
+﻿<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+  <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="3.0" m:MaxDataServiceVersion="3.0">
+    <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" Namespace="StandardODATA">
+      <EntityType Name="Document_АктВыполненныхРабот">
+        <Key>
+          <PropertyRef Name="Ref_Key" />
+        </Key>
+        <Property Name="Ref_Key" Type="Edm.Guid" Nullable="false" />
+        <Property Name="DataVersion" Type="Edm.String" Nullable="true" />
+        <Property Name="Number" Type="Edm.String" Nullable="true" />
+        <Property Name="Date" Type="Edm.DateTime" Nullable="true" />
+        <Property Name="DeletionMark" Type="Edm.Boolean" Nullable="true" />
+        <Property Name="Posted" Type="Edm.Boolean" Nullable="true" />
+        <Property Name="Контрагент_Key" Type="Edm.Guid" Nullable="true" />
+        <Property Name="Работы" Type="Collection(StandardODATA.Document_АктВыполненныхРабот_Работы_RowType)" Nullable="true" />
+        <NavigationProperty Name="Контрагент" Relationship="StandardODATA.Document_АктВыполненныхРабот_Контрагент" FromRole="Begin" ToRole="End" />
+      </EntityType>
+      <EntityType Name="Document_АктВыполненныхРабот_Работы">
+        <Key>
+          <PropertyRef Name="Ref_Key" />
+          <PropertyRef Name="LineNumber" />
+        </Key>
+        <Property Name="Ref_Key" Type="Edm.Guid" Nullable="false" />
+        <Property Name="LineNumber" Type="Edm.Int64" Nullable="false" />
+        <Property Name="Сумма" Type="Edm.Double" Nullable="true" />
+        <Property Name="Описание" Type="Edm.String" Nullable="true" />
+      </EntityType>
+      <EntityType Name="Catalog_Контрагенты">
+        <Key>
+          <PropertyRef Name="Ref_Key" />
+        </Key>
+        <Property Name="Ref_Key" Type="Edm.Guid" Nullable="false" />
+        <Property Name="DataVersion" Type="Edm.String" Nullable="true" />
+        <Property Name="Description" Type="Edm.String" Nullable="true" />
+        <Property Name="Code" Type="Edm.String" Nullable="true" />
+        <Property Name="DeletionMark" Type="Edm.Boolean" Nullable="true" />
+        <Property Name="Вид" Type="Edm.String" Nullable="true" />
+      </EntityType>
+      <ComplexType Name="NumberQualifiers">
+        <Property Name="AllowedSign" Type="Edm.String" Nullable="false" />
+        <Property Name="Digits" Type="Edm.Int16" Nullable="false" />
+        <Property Name="FractionDigits" Type="Edm.Int16" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="TypeDescription">
+        <Property Name="Types" Type="Collection(Edm.String)" Nullable="false" />
+        <Property Name="NumberQualifiers" Type="StandardODATA.NumberQualifiers" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="PointInTime">
+        <Property Name="Ref" Type="Edm.String" Nullable="false" />
+        <Property Name="Date" Type="Edm.DateTime" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="Document_АктВыполненныхРабот_Работы_RowType">
+        <Property Name="Ref_Key" Type="Edm.Guid" Nullable="false" />
+        <Property Name="LineNumber" Type="Edm.Int64" Nullable="false" />
+        <Property Name="Сумма" Type="Edm.Double" Nullable="true" />
+        <Property Name="Описание" Type="Edm.String" Nullable="true" />
+      </ComplexType>
+      <Association Name="Document_АктВыполненныхРабот_Контрагент">
+        <End Role="Begin" Type="StandardODATA.Document_АктВыполненныхРабот" Multiplicity="*" />
+        <End Role="End" Type="StandardODATA.Catalog_Контрагенты" Multiplicity="0..1" />
+      </Association>
+      <EnumType Name="ТипКонтрагента" UnderlyingType="Edm.Int32">
+        <Member Name="ФизЛицо" />
+        <Member Name="ЮрЛицо" />
+      </EnumType>
+      <EnumType Name="AccountType" UnderlyingType="Edm.Int32">
+        <Member Name="Active" />
+        <Member Name="ActivePassive" />
+        <Member Name="Passive" />
+      </EnumType>
+      <EnumType Name="AccountingRecordType" UnderlyingType="Edm.Int32">
+        <Member Name="Credit" />
+        <Member Name="Debit" />
+      </EnumType>
+      <EnumType Name="AllowedSign" UnderlyingType="Edm.Int32">
+        <Member Name="Any" />
+        <Member Name="Nonnegative" />
+      </EnumType>
+      <EntityContainer Name="EnterpriseV8" m:IsDefaultEntityContainer="true">
+        <EntitySet Name="Document_АктВыполненныхРабот" EntityType="StandardODATA.Document_АктВыполненныхРабот" />
+        <EntitySet Name="Document_АктВыполненныхРабот_Работы" EntityType="StandardODATA.Document_АктВыполненныхРабот_Работы" />
+        <EntitySet Name="Catalog_Контрагенты" EntityType="StandardODATA.Catalog_Контрагенты" />
+        <FunctionImport Name="Post" IsBindable="true" IsSideEffecting="true">
+          <Parameter Name="bindingParameter" Type="StandardODATA.Document_АктВыполненныхРабот" />
+          <Parameter Name="PostingModeOperational" Type="Edm.Boolean" />
+        </FunctionImport>
+        <FunctionImport Name="Unpost" IsBindable="true" IsSideEffecting="true">
+          <Parameter Name="bindingParameter" Type="StandardODATA.Document_АктВыполненныхРабот" />
+          <Parameter Name="PostingModeOperational" Type="Edm.Boolean" />
+        </FunctionImport>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

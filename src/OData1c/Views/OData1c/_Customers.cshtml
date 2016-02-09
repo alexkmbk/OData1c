@@ -1,0 +1,16 @@
+﻿@model IEnumerable<OData1c_console.TestBase.Catalog_Контрагенты>
+
+<table class="table table-striped table-bordered table-condensed">
+    <tr>
+        <th>Наименование</th>
+        <th>Вид</th>
+    </tr>
+    @foreach (var e in Model)
+    {
+        <tr>
+            <td>@e.Description</td>
+            <td>@e.Вид</td>
+        </tr>
+
+    }
+</table>

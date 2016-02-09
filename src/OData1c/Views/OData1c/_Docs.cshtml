@@ -1,0 +1,16 @@
+﻿@model IEnumerable<OData1c_console.TestBase.Document_АктВыполненныхРабот>
+
+<table class="table table-striped table-bordered table-condensed">
+    <tr>
+        <th>Номер</th>
+        <th>Дата</th>
+        <th>Контрагент</th>
+    </tr>
+    @foreach (var e in Model)
+    {
+        <tr>
+            <td>@e.Number</td>
+            <td>@e.Date</td>
+        </tr>
+    }
+</table>
