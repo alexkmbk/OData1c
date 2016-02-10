@@ -13,19 +13,60 @@
             <tr>
                 <td>@e.Description</td>
                 <td>@e.Вид</td>
+                <td style="display:none;">@e.Ref_Key</td>
             </tr>
         }
     </tbody>
 </table>
 
 <style>
-    .table-striped tbody tr.highlight td {
+    #customers_table tbody tr.highlight td {
         background-color: bisque;
     }
+
+    #customers_table tbody tr.highlight {
+        outline: none;
+        border-color: #ffd800;
+        box-shadow: 0 0 20px #ffd800;
+        border: 5px solid #ffd800;
+        border-radius: 7px;
+    }
+
+    table input {
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+}
 </style>
 
 <script>
+    // подсвечивание строки
     $('#customers_table > tbody > tr').on('click', function () {
         $(this).addClass('highlight').siblings().removeClass('highlight');
+    });
+
+    // двойной клик по ячейке таблицы, проиходсит вход в режим редактирования
+    $('#customers_table > tbody > tr > td').on('dblclick', function () {
+        var cell = $(this);
+        var col = cell.parent().children().index(cell);
+        var val = $(this).html();
+        // если первая колонка, то для редактирования устанавливается поле input
+        if (col == 0) {
+            cell.html('<input type="text" value="' + val + '" />');
+            var input = cell.find('input');
+        }
+        // если вторая колонка, то для редактирования устанавливается поле select
+        else if (col == 1) {
+            var options = "<option>ФизЛицо</option><option>ЮрЛицо</option>";
+            cell.html('<select value="' + val + '" >' + options + "</select>");
+            var input = cell.find('select');
+        }
+        
+        input.focus();
+        input.on('blur', function () {
+            $(this).parent().html($(this).val());
+        });
     });
 </script>
