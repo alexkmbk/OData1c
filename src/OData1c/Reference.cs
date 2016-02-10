@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // Original file name:
-// Generation date: 09.02.2016 16:32:42
+// Generation date: 11.02.2016 0:35:49
 namespace OData1c_console.TestBase
 {
     
@@ -39,7 +39,7 @@ namespace OData1c_console.TestBase
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, "StandardODATA", "OData1c_console.OData1c");
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "StandardODATA", "OData1c_console.TestBase");
             if ((resolvedType != null))
             {
                 return resolvedType;
@@ -54,7 +54,7 @@ namespace OData1c_console.TestBase
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
         protected string ResolveNameFromType(global::System.Type clientType)
         {
-            if (clientType.Namespace.Equals("OData1c_console.OData1c", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("OData1c_console.TestBase", global::System.StringComparison.Ordinal))
             {
                 return string.Concat("StandardODATA.", clientType.Name);
             }

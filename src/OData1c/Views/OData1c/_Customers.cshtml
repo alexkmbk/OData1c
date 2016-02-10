@@ -63,10 +63,37 @@
             cell.html('<select value="' + val + '" >' + options + "</select>");
             var input = cell.find('select');
         }
-        
+
         input.focus();
         input.on('blur', function () {
+            // Запрос на сервер для обновления данных
+            var row = $(this).parent().parent();
+
+            // После снятия фокуса, снова установим просто текст
             $(this).parent().html($(this).val());
+
+            var rowdata = new Array();
+
+            row.find("td").each(function (index, value) {
+                rowdata[index] = $(this).html();
+            });
+             $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CustomersUpdate", "OData1c")',
+                 data: { CustomerId: rowdata[2], CustomerName: rowdata[0], CustomerType: rowdata[1]},
+                success: function (data) {
+                    if (!data["Success"]){
+                        var myDiv = document.getElementById("formSetToken_divmsg");    
+                        myDiv.innerHTML = "Ошибка записи: " + data["Errors"];
+                    }
+                },
+                error: function (xhr, str) {
+                    var myDiv = document.getElementById("formSetToken_divmsg");
+                    myDiv.innerHTML = "Ошибка записи: " + xhr.responseCode;
+                }
+            });
+ 
+
         });
     });
 </script>
