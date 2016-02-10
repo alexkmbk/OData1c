@@ -1,24 +1,38 @@
 ﻿<h1>Данные из базы 1С</h1>
 <h4>Загрузка происходит при переключении вкладок</h4>
 
-<div id="tabs">
-    <ul>
-        <li><a href="#tabs-1">Акты выполненных работ</a></li>
-        <li><a href="/OData1c/Customers">Контрагенты</a></li>
+<div class="tabbable">
+    <ul class="nav nav-tabs" id="myTabs">
+        <li><a href="#Docs" class="active" data-toggle="tab">Акты выполненных работ</a></li>
+        <li><a href="#Customers" data-toggle="tab">Контрагенты</a></li>
     </ul>
 
-    <div id="tabs-1">
-        <p>
-            @Html.Partial("_Docs", ViewData["Docs"])
-        </p>
-
+    <div class="tab-content">
+        <div class="tab-pane active" id="Docs"></div>
+        <div class="tab-pane" id="Customers"></div>
     </div>
-
 </div>
 
-
 <script>
- 
-    $("#tabs").tabs();
+    $(function() {
+        var baseURL = '/OData1c/';
+        //load content for first tab and initialize
+        $('#Docs').load(baseURL + 'Docs', function () {
+            $('#myTabs').tab(); //initialize tabs
+        });
 
- </script>
+        $('#Customers').load(baseURL + 'Customers', function () {
+            $('#myTabs').tab(); //initialize tabs
+        });
+
+
+        $('#myTabs').bind('show', function(e) {
+           var pattern=/#.+/gi //use regex to get anchor(==selector)
+           var contentID = e.target.toString().match(pattern)[0]; //get anchor
+           //load content for selected tab
+            $(contentID).load(baseURL+contentID.replace('#',''), function(){
+                $('#myTabs').tab(); //reinitialize tabs
+            });
+        });
+    });
+</script>
