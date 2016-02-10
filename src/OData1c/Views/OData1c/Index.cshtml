@@ -6,14 +6,16 @@
         <li><a href="#tabs-1">Акты выполненных работ</a></li>
         <li><a href="/OData1c/Customers">Контрагенты</a></li>
     </ul>
+
+    <div id="tabs-1">
+        <p>
+            @Html.Partial("_Docs", ViewData["Docs"])
+        </p>
+
+    </div>
+
 </div>
 
-<div id="tabs-1">
-    <p>
-        @Html.Partial("_Docs", ViewData["Docs"])
-    </p>
-    
-</div>
 
 <script>
  
