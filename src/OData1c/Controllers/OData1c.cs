@@ -8,38 +8,34 @@ using System.Data.Services.Client;
 using Microsoft.Data.OData;
 
 using OData1c_console.TestBase;
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace OData1c.Controllers
 {
     public class OData1c : Controller
     {
-
+        // Получает данные справочника "Контрагенты"
         // GET: /<controller>/
         public IActionResult Customers()
         {
             Uri uri = new Uri("http://localhost/OData/odata/standard.odata/");
             var container = new EnterpriseV8(uri);
   
-            return View("_Customers", container.Catalog_Контрагенты.ToList());
+            return PartialView("_Customers", container.Catalog_Контрагенты.ToList());
         }
 
+        // Получает данные документов "Акты выполненных работ"
         // GET: /<controller>/
         public IActionResult Docs()
         {
             Uri uri = new Uri("http://localhost/OData/odata/standard.odata/");
             var container = new EnterpriseV8(uri);
  
-            return View("_Docs", container.Document_АктВыполненныхРабот.ToList());
+            return PartialView("_Docs", container.Document_АктВыполненныхРабот.ToList());
         }
 
         // GET: /<controller>/
         public IActionResult Index()
         {
-            Uri uri = new Uri("http://localhost/OData/odata/standard.odata/");
-            var container = new EnterpriseV8(uri);
-
-            ViewData["Docs"] = container.Document_АктВыполненныхРабот.ToList();
             return View();
         }
     }

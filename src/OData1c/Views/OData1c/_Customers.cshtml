@@ -1,15 +1,31 @@
 ﻿@model IEnumerable<OData1c_console.TestBase.Catalog_Контрагенты>
 
-<table class="table table-striped table-bordered table-condensed">
-    <tr>
-        <th>Наименование</th>
-        <th>Вид</th>
-    </tr>
-    @foreach (var e in Model)
-    {
+<table id="customers_table" class="table table-striped table-condensed table-hover table-bordered">
+    <thead>
         <tr>
-            <td>@e.Description</td>
-            <td>@e.Вид</td>
+            <th>Наименование</th>
+            <th>Вид</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var e in Model)
+        {
+            <tr>
+                <td>@e.Description</td>
+                <td>@e.Вид</td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+<style>
+    .table-striped tbody tr.highlight td {
+        background-color: bisque;
+    }
+</style>
+
+<script>
+    $('#customers_table > tbody > tr').on('click', function () {
+        $(this).addClass('highlight').siblings().removeClass('highlight');
+    });
+</script>

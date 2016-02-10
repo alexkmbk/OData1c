@@ -2,13 +2,13 @@
 <h4>Загрузка происходит при переключении вкладок</h4>
 
 <div class="tabbable">
-    <ul class="nav nav-tabs" id="myTabs">
+    <ul class="nav nav-tabs tabs-up" id="myTabs">
         <li><a href="#Docs" class="active" data-toggle="tab">Акты выполненных работ</a></li>
         <li><a href="#Customers" data-toggle="tab">Контрагенты</a></li>
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane active" id="Docs"></div>
+        <div class="tab-pane active " id="Docs"></div>
         <div class="tab-pane" id="Customers"></div>
     </div>
 </div>
@@ -35,4 +35,35 @@
             });
         });
     });
+
+
 </script>
+
+<style>
+    table {
+  border-spacing: 0 5px;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #006DCC;
+  color: white;
+}
+
+td {
+  background-color: #EEEEEE;
+}
+
+tr td:first-child,
+tr th:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+tr td:last-child,
+tr th:last-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+</style>
