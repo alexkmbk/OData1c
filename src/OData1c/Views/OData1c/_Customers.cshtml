@@ -1,23 +1,27 @@
 ﻿@model IEnumerable<OData1c_console.TestBase.Catalog_Контрагенты>
 
-<table id="customers_table" class="table table-striped table-condensed table-hover table-bordered">
-    <thead>
-        <tr>
-            <th>Наименование</th>
-            <th>Вид</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var e in Model)
-        {
+<div>
+    @*Специальное поле для передачи фокуса ввода таблице*@
+    <a href="#customers_table" id="customers_table_input"></a>
+    <table id="customers_table" class="table table-striped table-condensed table-hover table-bordered">
+        <thead>
             <tr>
-                <td>@e.Description</td>
-                <td>@e.Вид</td>
-                <td style="display:none;">@e.Ref_Key</td>
+                <th>Наименование</th>
+                <th>Вид</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var e in Model)
+            {
+                <tr>
+                    <td>@e.Description</td>
+                    <td>@e.Вид</td>
+                    <td style="display:none;">@e.Ref_Key</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <style>
     #customers_table tbody tr.highlight td {
@@ -42,6 +46,61 @@
 </style>
 
 <script>
+
+    function SaveData(e) {
+        // Запрос на сервер для обновления данных
+        var row = e.parent().parent();
+        // После снятия фокуса, снова установим просто текст
+        e.parent().html(e.val());
+
+        var rowdata = new Array();
+
+        row.find("td").each(function (index, value) {
+            rowdata[index] = $(this).html();
+        });
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("CustomersUpdate", "OData1c")',
+            data: { CustomerId: rowdata[2], CustomerName: rowdata[0], CustomerType: rowdata[1] },
+            success: function (data) {
+                if (!data["Success"]) {
+                    var myDiv = document.getElementById("formSetToken_divmsg");
+                    myDiv.innerHTML = "Ошибка записи: " + data["Errors"];
+                }
+            },
+            error: function (xhr, str) {
+                var myDiv = document.getElementById("formSetToken_divmsg");
+                myDiv.innerHTML = "Ошибка записи: " + xhr.responseCode;
+            }
+        });
+    }
+
+    function EditRow(e) {
+        var cell = e;
+        var col = cell.parent().children().index(cell);
+        var val = e.html();
+        // если первая колонка, то для редактирования устанавливается поле input
+        if (col == 0) {
+            cell.html('<input type="text" value="' + val + '" />');
+            var input = cell.find('input');
+        }
+            // если вторая колонка, то для редактирования устанавливается поле select
+        else if (col == 1) {
+            var options = "<option>ФизЛицо</option><option>ЮрЛицо</option>";
+            cell.html('<select value="' + val + '" >' + options + "</select>");
+            var input = cell.find('select');
+        }
+        // сохраним в поле input в атрибуте prevVal значение ячейки до изменения
+        input.attr("prevVal", val);
+        // присвоем полю input класс tableinput для облегчения использования селекторов
+        input.addClass("tableinput");
+        input.focus();
+        // при потере фокуса ввода сохраняем введенные значения
+        input.on('blur', function () {
+            SaveData($(this));
+        });
+    }
+
     // подсвечивание строки
     $('#customers_table > tbody > tr').on('click', function () {
         $(this).addClass('highlight').siblings().removeClass('highlight');
@@ -49,51 +108,68 @@
 
     // двойной клик по ячейке таблицы, проиходсит вход в режим редактирования
     $('#customers_table > tbody > tr > td').on('dblclick', function () {
-        var cell = $(this);
-        var col = cell.parent().children().index(cell);
-        var val = $(this).html();
-        // если первая колонка, то для редактирования устанавливается поле input
-        if (col == 0) {
-            cell.html('<input type="text" value="' + val + '" />');
-            var input = cell.find('input');
+        EditRow($(this));
+    });
+
+
+    // Обработка ввода с клавиатуры
+
+    $(document).on('keydown', function (e) {
+        // если нажата клавиша ESC и выполняется редактирование ячейки,
+        // то необходимо завершить редактирование не сохраняя введенные данные
+        if (e.keyCode == $.ui.keyCode.ESCAPE) {
+            if (e.target.className == "tableinput") {
+                e.preventDefault();
+                var input = $(".tableinput").eq(0);
+                var prevVal = input.attr("prevVal");
+                input.parent().html(prevVal);
+                $("#customers_table_input").focus();
+            }
         }
-        // если вторая колонка, то для редактирования устанавливается поле select
-        else if (col == 1) {
-            var options = "<option>ФизЛицо</option><option>ЮрЛицо</option>";
-            cell.html('<select value="' + val + '" >' + options + "</select>");
-            var input = cell.find('select');
-        }
-
-        input.focus();
-        input.on('blur', function () {
-            // Запрос на сервер для обновления данных
-            var row = $(this).parent().parent();
-
-            // После снятия фокуса, снова установим просто текст
-            $(this).parent().html($(this).val());
-
-            var rowdata = new Array();
-
-            row.find("td").each(function (index, value) {
-                rowdata[index] = $(this).html();
-            });
-             $.ajax({
-                type: 'POST',
-                url: '@Url.Action("CustomersUpdate", "OData1c")',
-                 data: { CustomerId: rowdata[2], CustomerName: rowdata[0], CustomerType: rowdata[1]},
-                success: function (data) {
-                    if (!data["Success"]){
-                        var myDiv = document.getElementById("formSetToken_divmsg");    
-                        myDiv.innerHTML = "Ошибка записи: " + data["Errors"];
-                    }
-                },
-                error: function (xhr, str) {
-                    var myDiv = document.getElementById("formSetToken_divmsg");
-                    myDiv.innerHTML = "Ошибка записи: " + xhr.responseCode;
+            // если  нажата клавиша ENTER во время редактирования ячейки,
+            // то необходимо сохранить введенные данные и перейти к редактированию следующей колонки
+        else if (e.keyCode == $.ui.keyCode.ENTER) {
+            if (e.target.className == "tableinput") {
+                e.preventDefault();
+                var input = $(".tableinput").eq(0);
+                // сохранение данных через OData пока не работает
+                var td = input.parent();
+                SaveData(input);
+                if (td.parent().children().index(td) < 1) {
+                    EditRow(td.next('td'));
                 }
-            });
- 
+                else {
+                    $("#customers_table_input").focus();
+                }
+            }
+        }
+       
+    });
 
-        });
+    // Если нажали клавишу внутри таблицы
+    $('#customers_table_input').on('keydown', function (e) {
+        // перемещение фокуса строки на одну строку вниз
+          if (e.keyCode == $.ui.keyCode.DOWN) {
+            e.preventDefault();
+            $('#customers_table .highlight').next().addClass('highlight').siblings().removeClass('highlight');
+          }
+
+        // перемещение фокуса строки на одну строку вверх
+        if (e.keyCode == $.ui.keyCode.UP) {
+            e.preventDefault();
+            $('#customers_table .highlight').prev().addClass('highlight').siblings().removeClass('highlight');
+        }
+        // вход в режим редактирования ячейки при нажатии клавише ENTER
+        if (e.keyCode == $.ui.keyCode.ENTER) {
+            e.preventDefault();
+             EditRow($('#customers_table .highlight > td').eq(0));
+        }
+    });
+
+    // Устанавливаем фокус на таблицу если щелкнули мышкой внутри таблицы
+    $("body").click(function (e) {
+        if (e.target.id == "customers_table" || $(e.target).parents("#customers_table").size()) {
+            $("#customers_table_input").focus();
+        }
     });
 </script>
