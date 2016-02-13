@@ -132,7 +132,6 @@
             if (e.target.className == "tableinput") {
                 e.preventDefault();
                 var input = $(".tableinput").eq(0);
-                // сохранение данных через OData пока не работает
                 var td = input.parent();
                 SaveData(input);
                 if (td.parent().children().index(td) < 1) {

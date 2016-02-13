@@ -30,8 +30,21 @@ namespace OData1c.Controllers
         {
             Uri uri = new Uri("http://localhost/OData/odata/standard.odata/");
             var container = new EnterpriseV8(uri);
- 
-            return PartialView("_Docs", container.Document_АктВыполненныхРабот.ToList());
+
+            // Чтение данных документа АктВыполненныхРабот
+            var query = container.CreateQuery<Document_АктВыполненныхРабот>("Document_АктВыполненныхРабот");
+
+            IEnumerable<Document_АктВыполненныхРабот> docs;
+            docs = query.Execute();
+
+            List<Document_АктВыполненныхРабот> docslst = new List<Document_АктВыполненныхРабот>();
+            foreach (var e in docs)
+            {
+                container.LoadProperty(e, "Контрагент");
+                docslst.Add(e);
+            }
+
+            return PartialView("_Docs", docslst);
         }
 
         // GET: /<controller>/
@@ -54,7 +67,7 @@ namespace OData1c.Controllers
             {
                 container.AttachTo("Catalog_Контрагенты", Contr);
                 container.UpdateObject(Contr);
-                //container.SaveChanges(); Почему то в MVC провекте этот метод не доступен, поэтмоу ничего не работает
+                container.SaveChanges();
             }
             catch (Exception e)
             {
@@ -65,17 +78,3 @@ namespace OData1c.Controllers
 
     }
 }
-
-
-// Чтение данных документа АктВыполненныхРабот
-/*var query = container.CreateQuery<Document_АктВыполненныхРабот>("Document_АктВыполненныхРабот");
-
-IEnumerable<Document_АктВыполненныхРабот> docs;
-docs = query.Execute();
-
-List<Document_АктВыполненныхРабот> docslst = new List<Document_АктВыполненныхРабот>();
-foreach (var e in docs)
-{
-    container.LoadProperty(e, "Контрагент");
-    docslst.Add(e);
-}*/

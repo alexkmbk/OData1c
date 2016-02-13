@@ -37,11 +37,6 @@
         "Microsoft.AspNet.WebApi.OData": "5.7.0",
         "Microsoft.OData.Client": "6.14.0"
       }
-    },
-    "dnxcore50": {
-      "dependencies": {
-        "Microsoft.OData.Client": "6.14.0"
-      }
     }
   },
 
